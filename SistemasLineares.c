@@ -30,8 +30,10 @@ double normaL2Residuo(SistLinear_t *SL, real_t *x)
 */
 int eliminacaoGauss (SistLinear_t *SL, real_t *x, int pivotamento)
 {
-  int iPivo;
+  int iPivo, k, j;
   int n = SL->n;
+  real_t m;
+
   for(int i = 0; i < n; i++){
     if(pivotamento){
       iPivo = encontraMax(SL, i);
@@ -41,7 +43,19 @@ int eliminacaoGauss (SistLinear_t *SL, real_t *x, int pivotamento)
         trocaLinha(SL, i, iPivo);
         prnSistLinear(SL);
       }
+
     }
+    
+    for(k = i+1; k < n; k++){
+      m = SL->A[k * n + i] / SL->A[i * n + i];
+      SL->A[k * n + i] = 0.0;
+      SL->b[k] -= SL->b[i] * m;
+
+      for(j = i+1; j < n; j++){
+        SL->A[k * n + j] -= SL->A[i * n + j] * m;
+      }
+    }
+    
   }
 
 }
@@ -221,10 +235,10 @@ SistLinear_t *lerSistLinear ()
   
   for(int i=0; i < n; ++i)
     for(int j=0; j < n; ++j)
-      scanf ("%g", &SL->A[i*n+j]);
+      scanf ("%lg", &SL->A[i*n+j]);
 
   for(int i=0; i < n; ++i)
-    scanf ("%g", &SL->b[i]);
+    scanf ("%lg", &SL->b[i]);
   
   return SL;
 }
@@ -237,8 +251,8 @@ void prnSistLinear (SistLinear_t *SL)
   for(int i=0; i < n; ++i) {
     printf("\n\t");
     for(int j=0; j < n; ++j)
-      printf ("%10.5g", SL->A[i*n+j]);
-    printf ("   |   %.8g", SL->b[i]);
+      printf ("%10.5lg", SL->A[i*n+j]);
+    printf ("   |   %.8lg", SL->b[i]);
   }
   printf("\n\n");
 }
@@ -249,7 +263,7 @@ void prnVetor (real_t *v, unsigned int n)
 
   printf ("\n");
   for(i=0; i < n; ++i)
-      printf ("%10.10g ", v[i]);
+      printf ("%10.10lg ", v[i]);
   printf ("\n\n");
 
 }

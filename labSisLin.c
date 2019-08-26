@@ -16,9 +16,9 @@ int main ()
   	SistLinear_t *SL;
 
   	SL = lerSistLinear();
-  	// prnSistLinear (SL);
 
   	eliminacaoGauss(SL, NULL, 1);
+  	prnSistLinear (SL);
 
 }
 

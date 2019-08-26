@@ -7,7 +7,7 @@
 
 #define COEF_MAX 32.0
 
-typedef float real_t;
+typedef double real_t;
 
 typedef struct {
   real_t *A; // coeficientes
