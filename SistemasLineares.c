@@ -36,8 +36,10 @@ int eliminacaoGauss (SistLinear_t *SL, real_t *x, int pivotamento)
     if(pivotamento){
       iPivo = encontraMax(SL, i);
 
+      printf("i: %d pivo: %d\n",i, iPivo);
       if(i != iPivo){
         trocaLinha(SL, i, iPivo);
+        prnSistLinear(SL);
       }
     }
   }
@@ -47,12 +49,12 @@ int eliminacaoGauss (SistLinear_t *SL, real_t *x, int pivotamento)
 int encontraMax(SistLinear_t *SL, int i){
   int n = SL->n;
   real_t maior = fabs(SL->A[i*n + i]);
-  int maiorI = 0;
+  int maiorI = i;
   int j;
 
   for(j = i; j < SL->n; j++){
-    if(fabs(SL->A[j*n+j]) > maior){
-      maior = fabs(SL->A[j*n+j]);
+    if(fabs(SL->A[j*n+i]) > maior){
+      maior = fabs(SL->A[j*n+i]);
       maiorI = j;
     }
   }
@@ -60,8 +62,22 @@ int encontraMax(SistLinear_t *SL, int i){
   return maiorI;
 }
 
+//Troca linha i pela linha j
 int trocaLinha(SistLinear_t *SL, int i, int j){
+  int k = 0;
+  int n = SL->n;
+  int bTemp;
+  real_t *aTemp = (real_t *) malloc(SL->n * sizeof(real_t));
 
+  for(k = 0; k < SL->n; k++){
+    aTemp[k] = SL->A[i * n + k];
+    SL->A[i * n + k] = SL->A[j * n + k];
+    SL->A[j * n + k] = aTemp[k];
+  }
+
+  bTemp = SL->b[i];
+  SL->b[i] = SL->b[j];
+  SL->b[j] = bTemp;
 }
 
 /*!

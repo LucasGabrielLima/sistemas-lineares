@@ -16,9 +16,9 @@ int main ()
   	SistLinear_t *SL;
 
   	SL = lerSistLinear();
-  	prnSistLinear (SL);
+  	// prnSistLinear (SL);
 
-  	printf("%d", encontraMax(SL, 0));
+  	eliminacaoGauss(SL, NULL, 1);
 
 }
 
