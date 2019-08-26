@@ -55,9 +55,28 @@ int eliminacaoGauss (SistLinear_t *SL, real_t *x, int pivotamento)
         SL->A[k * n + j] -= SL->A[i * n + j] * m;
       }
     }
-    
+
+    retroSubst(SL, x);
   }
 
+}
+
+int retroSubst(SistLinear_t *SL, real_t *x){
+  real_t soma;
+  int n = SL->n;
+  int j, i = n - 1;
+
+  x[i] = SL->b[i] / SL->A[i * n + i];
+
+  for(i = n-2; i >= 0; i--){
+    soma = SL->b[i];
+
+    for(j = i+1; j < n; j++){
+      soma -= SL->A[i * n + j] * x[j];
+    }
+
+    x[i] = soma / SL->A[i * n + i];
+  }
 }
 
 int encontraMax(SistLinear_t *SL, int i){

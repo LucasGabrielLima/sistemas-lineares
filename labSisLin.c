@@ -14,11 +14,14 @@ int main ()
 
 
   	SistLinear_t *SL;
+  	real_t *x;
 
   	SL = lerSistLinear();
+  	x = (real_t *) malloc(SL->n * sizeof(real_t));
 
-  	eliminacaoGauss(SL, NULL, 1);
+  	eliminacaoGauss(SL, x, 1);
   	prnSistLinear (SL);
+  	prnVetor(x, SL->n);
 
 }
 
