@@ -30,7 +30,37 @@ double normaL2Residuo(SistLinear_t *SL, real_t *x)
 */
 int eliminacaoGauss (SistLinear_t *SL, real_t *x, int pivotamento)
 {
+  int iPivo;
+  int n = SL->n;
+  for(int i = 0; i < n; i++){
+    if(pivotamento){
+      iPivo = encontraMax(SL, i);
 
+      if(i != iPivo){
+        trocaLinha(SL, i, iPivo);
+      }
+    }
+  }
+
+}
+
+int encontraMax(SistLinear_t *SL, int i){
+  int n = SL->n;
+  real_t maior = fabs(SL->A[i*n + i]);
+  int maiorI = 0;
+  int j;
+
+  for(j = i; j < SL->n; j++){
+    if(fabs(SL->A[j*n+j]) > maior){
+      maior = fabs(SL->A[j*n+j]);
+      maiorI = j;
+    }
+  }
+
+  return maiorI;
+}
+
+int trocaLinha(SistLinear_t *SL, int i, int j){
 
 }
 

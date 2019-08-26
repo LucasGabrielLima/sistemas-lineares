@@ -18,8 +18,7 @@ int main ()
   	SL = lerSistLinear();
   	prnSistLinear (SL);
 
-  	prnVetor(SL->b, SL->n);
-
+  	printf("%d", encontraMax(SL, 0));
 
 }
 
