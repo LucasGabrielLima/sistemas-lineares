@@ -22,6 +22,7 @@ int main ()
   	eliminacaoGauss(SL, x, 1);
   	prnSistLinear (SL);
   	prnVetor(x, SL->n);
+  	normaL2Residuo(SL, x);
 
 }
 

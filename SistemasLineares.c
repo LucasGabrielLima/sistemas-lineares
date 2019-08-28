@@ -13,7 +13,27 @@
 */
 double normaL2Residuo(SistLinear_t *SL, real_t *x)
 {
+  real_t *r = (real_t *) malloc(SL->n * sizeof(real_t));
+  real_t ax; //A * X da linha corrente
+  real_t somaR2 = 0; // Somatório dos quadrados dos resíduos de cada linha
+  int n = SL->n;
 
+  for(int i = 0; i < n; i++){
+    ax = 0;
+    for(int j = 0; j < n; j++){
+      ax += SL->A[i * n + j] * x[j];
+    }
+    r[i] = SL->b[i] - ax;
+  }
+
+  puts("Vetor de resíduos:");
+  prnVetor(r, n);
+
+  for(int i = 0; i < n; i++){
+    somaR2 += r[i] * r[i];
+  }
+
+  return sqrt(somaR2);
 }
 
 
@@ -47,6 +67,10 @@ int eliminacaoGauss (SistLinear_t *SL, real_t *x, int pivotamento)
     }
     
     for(k = i+1; k < n; k++){
+      if( SL->A[i * n + i] == 0){
+        fprintf(stderr, "Divisão por zero na eliminacao de Gauss\n");
+        return -1;
+      }
       m = SL->A[k * n + i] / SL->A[i * n + i];
       SL->A[k * n + i] = 0.0;
       SL->b[k] -= SL->b[i] * m;
@@ -66,6 +90,11 @@ int retroSubst(SistLinear_t *SL, real_t *x){
   int n = SL->n;
   int j, i = n - 1;
 
+  if( SL->A[i * n + i] == 0){
+    fprintf(stderr, "Divisão por zero na retrosubstituição\n");
+    return -1;
+  }
+
   x[i] = SL->b[i] / SL->A[i * n + i];
 
   for(i = n-2; i >= 0; i--){
@@ -75,8 +104,15 @@ int retroSubst(SistLinear_t *SL, real_t *x){
       soma -= SL->A[i * n + j] * x[j];
     }
 
+  if( SL->A[i * n + i] == 0){
+    fprintf(stderr, "Divisão por zero na retrosubstituição\n");
+    return -1;
+  }
+
     x[i] = soma / SL->A[i * n + i];
   }
+
+  return 1;
 }
 
 int encontraMax(SistLinear_t *SL, int i){
