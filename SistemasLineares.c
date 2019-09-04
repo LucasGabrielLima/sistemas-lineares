@@ -24,6 +24,7 @@ double normaL2Residuo(SistLinear_t *SL, real_t *x)
       ax += SL->A[i * n + j] * x[j];
     }
     r[i] = SL->b[i] - ax;
+    printf("b - a: %10.10lg %10.10lg\n", SL->b[i], ax);
   }
 
   puts("Vetor de resíduos:");
@@ -34,6 +35,20 @@ double normaL2Residuo(SistLinear_t *SL, real_t *x)
   }
 
   return sqrt(somaR2);
+}
+
+void copiaSistema(SistLinear_t *dest, SistLinear_t *src){
+    int n = src->n;
+
+    for(int i = 0; i < n; i++){
+        for(int j = 0; j < n; j++){
+            dest->A[i * n + j] = src->A[i * n + j];
+        }
+
+        dest->b[i] = src->b[i];
+    }
+
+    src->n = n;
 }
 
 
