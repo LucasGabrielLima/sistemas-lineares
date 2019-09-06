@@ -192,7 +192,33 @@ int trocaLinha(SistLinear_t *SL, int i, int j){
 */
 int gaussJacobi (SistLinear_t *SL, real_t *x, real_t erro)
 {
+  int n = SL->n, k;
+  real_t norma = 1 + erro;
+  real_t soma;
+  real_t xk[n]; // x na iteração k
 
+  for(k = 0; norma > erro; k++){
+    for(int i = 0; i < n; i++){
+      soma = 0.0;
+
+
+      for(int j = 0; j < n; j++){ 
+        if(j != i){
+          soma += SL->A[i*n+j] * x[j];
+        }
+      }
+
+      xk[i] = (SL->b[i] - soma) / SL->A[i * n + i];
+    }
+
+    norma = normaL2Residuo(SL, x);
+    for (int i = 0; i < n; i++){
+      x[i] = xk[i];
+    }
+    
+  }
+
+  return k;
 
 }
 
