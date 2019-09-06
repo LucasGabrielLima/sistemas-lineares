@@ -5,6 +5,9 @@
 #include "utils.h"
 #include "SistemasLineares.h"
 
+//O vetor pivos é preenchido com os índices correspondentes àquela linha na matriz original.
+int *pivos;
+
 /*!
   \brief Essa função calcula a norma L2 do resíduo de um sistema linear 
 
@@ -21,7 +24,7 @@ double normaL2Residuo(SistLinear_t *SL, real_t *x)
   for(int i = 0; i < n; i++){
     ax = 0;
     for(int j = 0; j < n; j++){
-      ax += SL->A[i * n + j] * x[j];
+      ax += SL->A[i * n + j] * x[pivos[j]];
     }
     r[i] = SL->b[i] - ax;
     printf("b - a: %10.10lg %10.10lg\n", SL->b[i], ax);
@@ -68,6 +71,15 @@ int eliminacaoGauss (SistLinear_t *SL, real_t *x, int pivotamento)
   int iPivo, k, j;
   int n = SL->n;
   real_t m;
+
+  
+  if(pivotamento){
+    pivos = (int *) malloc(n * sizeof(int));
+    for(int i = 0; i < n; i++){
+      pivos[i] = i;
+    }
+  }
+
 
   for(int i = 0; i < n; i++){
     if(pivotamento){
@@ -150,8 +162,12 @@ int encontraMax(SistLinear_t *SL, int i){
 int trocaLinha(SistLinear_t *SL, int i, int j){
   int k = 0;
   int n = SL->n;
-  int bTemp;
+  int bTemp, iTemp;
   real_t *aTemp = (real_t *) malloc(SL->n * sizeof(real_t));
+  
+  iTemp = pivos[i];
+  pivos[i] = pivos[j];
+  pivos[j] = iTemp;
 
   for(k = 0; k < SL->n; k++){
     aTemp[k] = SL->A[i * n + k];
@@ -192,8 +208,30 @@ int gaussJacobi (SistLinear_t *SL, real_t *x, real_t erro)
   */
 int gaussSeidel (SistLinear_t *SL, real_t *x, real_t erro)
 {
+  int n = SL->n, k;
+  real_t norma = 1 + erro;
+  real_t soma;
+  real_t xk[n]; // x na iteração k
 
+  for(k = 0; norma > erro; k++){
+    for(int i = 0; i < n; i++){
+      soma = 0.0;
 
+      for(int j = 0; j < i; j++){ soma += SL->A[i*n+j] * xk[j] ;}
+
+      for(int j = i+1; j < n; j++){ soma += SL->A[i*n+j] * x[j] ;}
+
+      xk[i] = (SL->b[i] - soma) / SL->A[i * n + i];
+    }
+
+    norma = normaL2Residuo(SL, x);
+    for (int i = 0; i < n; i++){
+      x[i] = xk[i];
+    }
+    
+  }
+
+  return k;
 }
 
 

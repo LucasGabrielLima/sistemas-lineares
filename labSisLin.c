@@ -14,7 +14,7 @@ int main ()
 
 
 
-  	SistLinear_t *SL, *Soriginal;
+  	SistLinear_t *SL, *Soriginal, *Seg;
   	real_t *x;
 
   	SL = lerSistLinear();
@@ -22,12 +22,17 @@ int main ()
 
     Soriginal = alocaSistLinear(SL->n);
 
-    copiaSistema(Soriginal, SL);
-
+    copiaSistema(Soriginal, SL); // copia sistema original
   	eliminacaoGauss(SL, x, 1);
+    puts("solução eliminação de gauss");
   	prnSistLinear (SL);
   	prnVetor(x, SL->n);
-  	normaL2Residuo(Soriginal, x);
+
+    // copiaSistema(Seg, SL); //copia sistema após e.g.
+		// gaussSeidel(Seg, x, EPS);
+		// puts("solução eliminação de gauss");
+  	// prnSistLinear (Seg);
+  	// prnVetor(x, SL->n);
 
 }
 
