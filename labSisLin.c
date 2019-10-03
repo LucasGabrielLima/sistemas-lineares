@@ -29,7 +29,7 @@ int main ()
   	prnSistLinear (SL);
   	prnVetor(x, SL->n);
 
-    copiaSistema(Seg, SL); //copia sistema após e.g.
+    copiaSistema(Seg, Soriginal); //copia sistema após e.g.
 
 		gaussSeidel(Seg, x, EPS);
 		puts("solução eliminação de gauss");
